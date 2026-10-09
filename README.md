@@ -70,6 +70,10 @@ Before tagging, keep `package.json`, `package-lock.json`, `manifest.json`, and
 `versions.json` in sync and commit the intended release changes. Version edits
 alone do not publish anything. Releases remain experimental.
 
+Every version must include `releases/<version>.md` with Features, Installation,
+Limitations, and Verification sections. CI rejects missing or empty sections
+and publishes those notes as the release description (without frontmatter).
+
 ## Development
 
 See [Contributing](CONTRIBUTING.md) for checks, verification limits, and the

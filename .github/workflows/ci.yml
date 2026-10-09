@@ -20,6 +20,7 @@ jobs:
           node-version: "25.6.0"
           cache: npm
       - run: node scripts/check-version.mjs
+      - run: node scripts/release-notes.mjs release-notes.txt
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm test
       # The build script runs typecheck before bundling.
@@ -30,6 +31,7 @@ jobs:
           path: |
             main.js
             manifest.json
+            release-notes.txt
           if-no-files-found: error
 
   release:
@@ -53,6 +55,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
+          test -s release/release-notes.txt
           gh release create "$RELEASE_TAG" release/main.js release/manifest.json \
             --verify-tag --prerelease --title "Quiet Car $RELEASE_TAG" \
-            --notes "Experimental desktop plugin for Obsidian core 1.14.4 only. SPA automation remains incomplete; the native -3 branch has not been exercised. See README and CONTRIBUTING for verification limits."
+            --notes-file release/release-notes.txt
