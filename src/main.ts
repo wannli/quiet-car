@@ -6,7 +6,7 @@ import {
 import { PreferenceStore, type PreferenceProblem } from './preferences.js';
 import { AutoReaderSettingsTab } from './settings.js';
 
-export default class AutoWebReader extends Plugin {
+export default class QuietCar extends Plugin {
   preferences!: PreferenceStore;
   integrationStatus = 'Native integration has not started.';
   private bridge: NativeReaderBridge | null = null;

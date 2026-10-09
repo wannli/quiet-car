@@ -6,11 +6,11 @@ import { createServer } from 'node:net';
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const sandbox = join(root, '.sandbox');
-export const vault = join(sandbox, 'Auto Web Reader Test Vault');
+export const vault = join(sandbox, 'Quiet Car Test Vault');
 export const profile = join(sandbox, 'obsidian-profile');
 export const executable = '/Applications/Obsidian.app/Contents/MacOS/Obsidian';
-export const marker = '.auto-web-reader-test.json';
-export const identity = { schema: 1, purpose: 'isolated auto-web-reader native tests', root, vault, profile };
+export const marker = '.quiet-car-test.json';
+export const identity = { schema: 1, purpose: 'isolated quiet-car native tests', root, vault, profile };
 export const json = value => JSON.stringify(value, null, 2) + '\n';
 export const isMain = url => process.argv[1] && resolve(process.argv[1]) === fileURLToPath(url);
 export async function stat(path) {

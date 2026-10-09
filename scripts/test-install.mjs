@@ -5,7 +5,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { root, sandbox, vault, profile, owned, safe, stat, readFile, createOnly, directory, json, isMain } from './test-sandbox.mjs';
-export const pluginId = 'auto-web-reader';
+export const pluginId = 'quiet-car';
 export const pluginDir = join(vault, '.obsidian/plugins', pluginId);
 export const sha = data => createHash('sha256').update(data).digest('hex');
 export function assertProfileStopped() {

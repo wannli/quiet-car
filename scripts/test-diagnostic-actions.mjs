@@ -1,8 +1,8 @@
 // Diagnostic actions only, serialized behind the parent CDP identity guard.
 export async function diagnosticAction({ op, id, url, token }) {
-  const key = '__awrDiagnostic';
+  const key = '__quietCarDiagnostic';
   if (op === 'init') {
-    if (window[key] || app.plugins.plugins['auto-web-reader'] || app.workspace.getLeavesOfType('webviewer').length) throw Error('Diagnostic requires clean owned native workspace');
+    if (window[key] || app.plugins.plugins['quiet-car'] || app.workspace.getLeavesOfType('webviewer').length) throw Error('Diagnostic requires clean owned native workspace');
     const origin = new URL(url);
     if (origin.origin !== url || origin.hostname !== '127.0.0.1' || origin.protocol !== 'http:') throw Error('Loopback fixture required');
     window[key] = { token, origin: url, leaves: {}, views: {}, trace: [], undo: [], errors: [], instrumented: false,
@@ -31,7 +31,7 @@ export async function diagnosticAction({ op, id, url, token }) {
     fixtureURL(url); if (c.leaves[id]) throw Error('Duplicate owned leaf');
     const l = app.workspace.getLeaf('tab'); c.leaves[id] = l;
     await l.setViewState({ type: 'webviewer', active: true, state: { url, navigate: true } }); c.views[id] = l.view;
-    return { id: l.id, managed: !!app.plugins.plugins['auto-web-reader']?.bridge?.getSession(l.view) };
+    return { id: l.id, managed: !!app.plugins.plugins['quiet-car']?.bridge?.getSession(l.view) };
   }
   if (op === 'snapshot') {
     const l = leaf(), v = l.view, r = v.renderer, win = v.containerEl.ownerDocument.defaultView, nativeWin = win.electronWindow;
@@ -42,7 +42,7 @@ export async function diagnosticAction({ op, id, url, token }) {
     }
     let currentUrl; try { currentUrl = v.webview.getURL(); } catch { currentUrl = null; }
     return { mode: v.mode, viewType: v.getViewType(), readerIsOwnedDOM: v.contentEl.contains(v.readerView), readerMatchesSelector: v.contentEl.querySelector('.reader-mode-content') === v.readerView,
-      url: currentUrl, nativeUrl: v.url, leafId: l.id, managed: !!app.plugins.plugins['auto-web-reader']?.bridge?.getSession(v),
+      url: currentUrl, nativeUrl: v.url, leafId: l.id, managed: !!app.plugins.plugins['quiet-car']?.bridge?.getSession(v),
       activeLeafId: app.workspace.activeLeaf?.id, activeTabGroupMatches: app.workspace.activeTabGroup === l.parent,
       parentChildIndex: l.parent?.children?.indexOf(l), parentSelectedPrimitives: Object.fromEntries(Object.entries(l.parent ?? {}).filter(([k, value]) => /active|selected|current|index/i.test(k) && ['string', 'number', 'boolean'].includes(typeof value))),
       window: { visibility: win.document.visibilityState, hidden: win.document.hidden, focused: win.document.hasFocus(), width: win.innerWidth, height: win.innerHeight,
@@ -50,7 +50,7 @@ export async function diagnosticAction({ op, id, url, token }) {
       elements: { leaf: shape(l.containerEl), tab: shape(l.tabHeaderEl), parent: shape(l.parent?.containerEl), view: shape(v.containerEl), content: shape(v.contentEl),
         reader: shape(v.readerView), guest: shape(v.webview), preview: shape(r?.previewEl), sizer: shape(r?.sizerEl) },
       renderer: r ? { fields, ownKeys: Object.keys(r).slice(0, 45), methods: Object.getOwnPropertyNames(Object.getPrototypeOf(r)).filter(k => typeof r[k] === 'function').slice(0, 65) } : null,
-      nativeUnmodifiedControl: !c.instrumented && !app.plugins.plugins['auto-web-reader'] && app.viewRegistry.viewByType.webviewer === c.originalFactory &&
+      nativeUnmodifiedControl: !c.instrumented && !app.plugins.plugins['quiet-car'] && app.viewRegistry.viewByType.webviewer === c.originalFactory &&
         ['getReaderModeContent', 'displayReaderView', 'displayWebView', 'onOpen'].every(k => !Object.hasOwn(v, k)) };
   }
   if (op === 'select') { leaf().tabHeaderEl.click(); return true; }
@@ -80,15 +80,15 @@ export async function diagnosticAction({ op, id, url, token }) {
   }
   if (op === 'close') { leaf().detach(); delete c.leaves[id]; delete c.views[id]; return true; }
   if (op === 'load') {
-    await app.plugins.loadManifests(); await app.plugins.loadPlugin('auto-web-reader');
-    const p = app.plugins.plugins['auto-web-reader'];
+    await app.plugins.loadManifests(); await app.plugins.loadPlugin('quiet-car');
+    const p = app.plugins.plugins['quiet-car'];
     if (p?.coreVersion !== '1.14.4' || !p.bridge?.refreshFactories() || p.preferences.state.enabled !== true) throw Error('Candidate/version/factory/preference precondition failed');
     return { importedApiVersion: p.coreVersion };
   }
-  if (op === 'unload') { await app.plugins.unloadPlugin('auto-web-reader'); return true; }
+  if (op === 'unload') { await app.plugins.unloadPlugin('quiet-car'); return true; }
   if (op === 'trace') return { events: c.trace, dropped: c.traceDropped ?? 0 };
   if (op === 'cleanup') {
-    await app.plugins.unloadPlugin('auto-web-reader');
+    await app.plugins.unloadPlugin('quiet-car');
     for (const l of Object.values(c.leaves)) l.detach();
     for (const restore of c.undo.reverse()) restore();
     const clean = { factoryRestored: app.viewRegistry.viewByType.webviewer === c.originalFactory, errors: c.errors };

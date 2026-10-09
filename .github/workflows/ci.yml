@@ -19,7 +19,40 @@ jobs:
         with:
           node-version: "25.6.0"
           cache: npm
+      - run: node scripts/check-version.mjs
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm test
       # The build script runs typecheck before bundling.
       - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quiet-car
+          path: |
+            main.js
+            manifest.json
+          if-no-files-found: error
+
+  release:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: quiet-car
+          path: release
+      - name: Publish experimental release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" release/main.js release/manifest.json \
+            --verify-tag --prerelease --title "Quiet Car $RELEASE_TAG" \
+            --notes "Experimental desktop plugin for Obsidian core 1.14.4 only. SPA automation remains incomplete; the native -3 branch has not been exercised. See README and CONTRIBUTING for verification limits."

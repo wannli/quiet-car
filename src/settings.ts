@@ -1,12 +1,12 @@
 import { App, PluginSettingTab, Setting, type ToggleComponent } from 'obsidian';
-import type AutoWebReader from './main.js';
+import type QuietCar from './main.js';
 
 export class AutoReaderSettingsTab extends PluginSettingTab {
   private feedback?: HTMLElement;
   private integration?: HTMLElement;
   private toggle?: ToggleComponent;
 
-  constructor(app: App, private readonly host: AutoWebReader) {
+  constructor(app: App, private readonly host: QuietCar) {
     super(app, host);
   }
 

@@ -52,13 +52,23 @@ mise exec node@25.6.0 -- npm run build
 ## Try it in an isolated vault
 
 1. Copy root `main.js` and `manifest.json` into
-   `<vault>/.obsidian/plugins/auto-web-reader/`.
+   `<vault>/.obsidian/plugins/quiet-car/`.
 2. Enable Obsidian's core **Web Viewer**, then the **Quiet Car** community plugin.
 3. Manually close and reopen any existing Web Viewer tabs.
 
-The internal folder ID remains `auto-web-reader` for compatibility.
 Use a dedicated test vault, not a personal vault. No marketplace publication
 or release readiness is claimed.
+
+## Versions and releases
+
+The first version is `0.1.0`. CI checks version consistency, runs tests and
+builds on pushes and pull requests, and saves the plugin assets. Pushing a tag
+that exactly matches `manifest.json` (for example `0.1.0`, without a `v` prefix)
+publishes a GitHub prerelease with `main.js` and `manifest.json` after checks pass.
+
+Before tagging, keep `package.json`, `package-lock.json`, `manifest.json`, and
+`versions.json` in sync and commit the intended release changes. Version edits
+alone do not publish anything. Releases remain experimental.
 
 ## Development
 

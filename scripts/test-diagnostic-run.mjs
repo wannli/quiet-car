@@ -21,7 +21,7 @@ const cdp = await connect(), token = randomUUID();
 await directory(join(sandbox, 'evidence')); const evidence = await mkdtemp(join(sandbox, 'evidence', 'diagnostic-'));
 const result = { status: 'running', scope: 'DIAGNOSTIC ONLY; not acceptance', hashes, runtime: cdp.runtime, evidence, stages: [], started: new Date().toISOString() };
 const originals = new Map();
-for (const relative of ['workspace.json', 'community-plugins.json', 'plugins/auto-web-reader/data.json']) {
+for (const relative of ['workspace.json', 'community-plugins.json', 'plugins/quiet-car/data.json']) {
   const path = join(vault, '.obsidian', relative), bytes = await stat(path) ? await readFile(path) : null;
   originals.set(relative, bytes); if (bytes) await createOnly(join(evidence, 'metadata-before', relative), bytes);
 }

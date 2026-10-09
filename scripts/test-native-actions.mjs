@@ -1,7 +1,7 @@
 // Serialized into the VERIFIED renderer only. No production hooks or guest extractor.
 export async function nativeAction({ op, id, url, value, token }) {
-  const key = '__autoWebReaderNativeSmoke';
-  const pluginId = 'auto-web-reader';
+  const key = '__quietCarNativeSmoke';
+  const pluginId = 'quiet-car';
   if (op === 'init') {
     if (window[key]) throw Error('Test harness already exists');
     const fixture = new URL(url);

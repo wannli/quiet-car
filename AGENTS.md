@@ -5,8 +5,9 @@ created-by: ai
 
 ## Scope and ownership
 - This is a standalone experimental desktop plugin. TypeScript + esbuild are approved.
-- Public brand: Quiet Car; repository/package: quiet-car. Preserve internal plugin ID and install
-  path auto-web-reader, existing local checkout names, and sandbox names for compatibility.
+- Public brand: Quiet Car; repository/package/plugin ID and install folder: quiet-car.
+  Version 0.1.0 is the first release; no legacy-name compatibility is required.
+  Do not rename the active checkout or adopt existing sandbox state automatically.
 - Work only on assigned files; coordinate shared contracts rather than overwriting other agents.
 - Preserve unknown files. Do not commit, push, publish, deploy, package, or install unless asked.
 - Work in this existing project checkout; do not create a competing worktree during coordinated work.

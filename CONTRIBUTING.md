@@ -22,8 +22,8 @@ Direct checks are permitted for this project. Do not interrupt existing
 processes. Documentation-only work does not require running tests or builds.
 
 TypeScript and esbuild produce the plugin bundle. There are no runtime package
-dependencies. Preserve the internal plugin ID `auto-web-reader`; the public
-repository/package name is `quiet-car`.
+dependencies. The plugin ID, install folder, repository, and package name are
+`quiet-car`. Version `0.1.0` is the first release; no legacy migration is needed.
 
 ## Design boundaries
 
@@ -37,7 +37,7 @@ repository/package name is `quiet-car`.
 
 ## Verification scope
 
-The branded Quiet Car build passed **138 tests**, typecheck, and build without
+The earlier branded Quiet Car build passed **138 tests**, typecheck, and build without
 errors or warnings. Model tests and unsafe characterization controls are not
 substitutes for actual native content checks.
 
@@ -48,6 +48,10 @@ targeted timing/control and full-restart checks on desktop core 1.14.4:
 Historical main.js SHA-256
 ddbf9d1f46b0a7226a03d2ae6dc7875256ecb2fb721d75e4e0a6e15f2fe4f4c6
 ```
+
+These are historical results, not validation of the current plugin-ID rename.
+The renamed sandbox requires fresh ownership markers; do not adopt or rewrite
+existing sandbox state to bypass its guards. No new native run is claimed.
 
 Those checks covered visible background Reader content, actual Original guest
 content, manual intent, settings cancellation, late-asset/no-flicker behavior,

@@ -1,9 +1,9 @@
 // Test-only native factory decoration BEFORE candidate load. Every native function delegates.
 export function targetedAction({ op, id, token }) {
-  const key = '__awrTargetedNative', base = window.__autoWebReaderNativeSmoke;
+  const key = '__quietCarTargetedNative', base = window.__quietCarNativeSmoke;
   if (!base || base.token !== token) throw Error('Verified base harness required');
   if (op === 'install') {
-    if (window[key] || app.plugins.plugins['auto-web-reader']) throw Error('Must install before candidate');
+    if (window[key] || app.plugins.plugins['quiet-car']) throw Error('Must install before candidate');
     const core = app.internalPlugins.getPluginById('webviewer'), registry = app.viewRegistry.viewByType;
     const original = core.views.webviewer;
     if (registry.webviewer !== original) throw Error('Native factories differ');
@@ -24,7 +24,7 @@ export function targetedAction({ op, id, token }) {
       patch(view, 'getReaderModeContent', function (...args) {
         // Actual existing session.entry is set by request() before this native getter entry.
         // current(request) was inspected: ownership/generation/readiness reads only; no dispatch or mutation.
-        const session = c.gapView === view ? app.plugins.plugins['auto-web-reader']?.bridge?.getSession(view) : null;
+        const session = c.gapView === view ? app.plugins.plugins['quiet-car']?.bridge?.getSession(view) : null;
         const actualRequest = session?.entry, experiment = c.gapView === view ? c.gapMode : null;
         const currentRead = () => {
           if (!session || !actualRequest || typeof session.current !== 'function') return { accessible: false };
@@ -123,7 +123,7 @@ export function targetedAction({ op, id, token }) {
   }
   if (op === 'trace') return c.trace;
   if (op === 'restore') {
-    if (app.plugins.plugins['auto-web-reader']) throw Error('Unload candidate before test override restoration');
+    if (app.plugins.plugins['quiet-car']) throw Error('Unload candidate before test override restoration');
     c.gapView = null; c.gapMode = null; c.holdNext = false;
     if (c.held) { c.held(); c.held = null; }
     for (const restore of c.restore.reverse()) restore();

@@ -33,7 +33,7 @@ async function productionIdentity() {
 result.productionBefore = await productionIdentity();
 assert.equal((await rawRead(join(root, 'main.js'))).length, 36617);
 const originals = new Map();
-for (const name of ['workspace.json', 'community-plugins.json', 'plugins/auto-web-reader/data.json']) {
+for (const name of ['workspace.json', 'community-plugins.json', 'plugins/quiet-car/data.json']) {
   const path = join(vault, '.obsidian', name), bytes = await stat(path) ? await readFile(path) : null;
   originals.set(name, bytes); if (bytes) await createOnly(join(evidence, 'metadata-before', name), bytes);
 }

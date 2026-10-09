@@ -62,7 +62,7 @@ export async function runNative(expected) {
     if (initialized) {
       try {
         result.cleanupErrors = await h.act('cleanup');
-        const unloaded = await cdp.evaluate(() => !app.plugins.plugins['auto-web-reader']);
+        const unloaded = await cdp.evaluate(() => !app.plugins.plugins['quiet-car']);
         assert.equal(unloaded, true, 'Candidate must be unloaded before preference restoration');
         // Restore ONLY this plugin preference touched by the UI tests; no other settings/notes.
         if (preference) await replaceOwned(data, preference);

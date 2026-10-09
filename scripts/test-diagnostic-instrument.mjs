@@ -1,7 +1,7 @@
 // Transparent instance-only observers, installed via native constructor delegation before candidate.
 export function diagnosticInstrument({ token }) {
-  const c = window.__awrDiagnostic;
-  if (!c || c.token !== token || c.instrumented || app.plugins.plugins['auto-web-reader']) throw Error('Diagnostic hook ownership/preload guard');
+  const c = window.__quietCarDiagnostic;
+  if (!c || c.token !== token || c.instrumented || app.plugins.plugins['quiet-car']) throw Error('Diagnostic hook ownership/preload guard');
   const core = app.internalPlugins.getPluginById('webviewer'), slots = app.viewRegistry.viewByType, nativeFactory = c.originalFactory;
   if (core.views.webviewer !== nativeFactory || slots.webviewer !== nativeFactory) throw Error('Unexpected native factories');
   const mark = (type, data = {}) => { if (c.trace.length < 1200) c.trace.push({ seq: c.trace.length, at: performance.now(), type, ...data }); else c.traceDropped = (c.traceDropped ?? 0) + 1; };

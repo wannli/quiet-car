@@ -16,7 +16,7 @@ await verifyInstalled(expected);
 await directory(join(sandbox, 'evidence'));
 const evidence = await mkdtemp(join(sandbox, 'evidence', 'restart-'));
 const result = { status: 'running', evidence, hashes: expected, started: new Date().toISOString() };
-const paths = ['workspace.json', 'community-plugins.json', 'plugins/auto-web-reader/data.json'];
+const paths = ['workspace.json', 'community-plugins.json', 'plugins/quiet-car/data.json'];
 const originals = new Map();
 let cdp = await connect(), fixture, stopped = false, setupStarted = false;
 async function until(label, read, predicate, ms = 12000) {
@@ -25,7 +25,7 @@ async function until(label, read, predicate, ms = 12000) {
   throw Error(label + ': ' + JSON.stringify(value));
 }
 const snapshot = () => cdp.evaluate(() => {
-  const p = app.plugins.plugins['auto-web-reader'];
+  const p = app.plugins.plugins['quiet-car'];
   return { layoutReady: app.workspace.layoutReady, importedApiVersion: p?.coreVersion,
     notes: app.vault.getMarkdownFiles().map(f => f.path).sort(),
     views: app.workspace.getLeavesOfType('webviewer').map(l => {
@@ -37,7 +37,7 @@ const snapshot = () => cdp.evaluate(() => {
 });
 async function stopOwned(allowedOrigin) {
   await cdp.evaluate(origin => {
-    if (window.__autoWebReaderNativeSmoke || window.__awrTargetedNative) throw Error('Instrumentation still present');
+    if (window.__quietCarNativeSmoke || window.__quietCarTargetedNative) throw Error('Instrumentation still present');
     if (app.workspace.getLeavesOfType('webviewer').some(l => !l.view.webview.getURL().startsWith(origin + '/'))) throw Error('Unowned restored leaf');
     return true;
   }, allowedOrigin);
@@ -63,8 +63,8 @@ try {
   setupStarted = true;
   const id = await cdp.evaluate(async url => {
     await app.plugins.loadManifests();
-    if (!await app.plugins.enablePluginAndSave('auto-web-reader')) throw Error('Candidate enable failed');
-    const p = app.plugins.plugins['auto-web-reader'];
+    if (!await app.plugins.enablePluginAndSave('quiet-car')) throw Error('Candidate enable failed');
+    const p = app.plugins.plugins['quiet-car'];
     if (p.coreVersion !== '1.14.4') throw Error('Imported apiVersion mismatch');
     await p.preferences.setEnabled(true);
     const l = app.workspace.getLeaf('tab');
@@ -82,7 +82,7 @@ try {
   const persisted = await until('owned workspace and plugin list persisted', async () => {
     try { return { workspace: String(await readFile(join(vault, '.obsidian/workspace.json'))),
       plugins: JSON.parse(await readFile(join(vault, '.obsidian/community-plugins.json'))) }; } catch { return null; }
-  }, v => v && v.workspace.includes(id) && v.workspace.includes(fixture.urls['article-a']) && v.plugins.includes('auto-web-reader'));
+  }, v => v && v.workspace.includes(id) && v.workspace.includes(fixture.urls['article-a']) && v.plugins.includes('quiet-car'));
   const persistedLeaves = [];
   function inspectSaved(value) {
     if (!value || typeof value !== 'object') return;
@@ -127,7 +127,7 @@ finally {
       await cdp.evaluate(async origin => {
         const leaves = app.workspace.getLeavesOfType('webviewer');
         if (leaves.some(l => !l.view.webview.getURL().startsWith(origin + '/'))) throw Error('Unknown native view during cleanup');
-        await app.plugins.unloadPlugin('auto-web-reader');
+        await app.plugins.unloadPlugin('quiet-car');
         for (const l of leaves) l.detach(); return true;
       }, fixture.origin);
       result.finalShutdown = await stopOwned(fixture.origin);
