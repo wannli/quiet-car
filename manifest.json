@@ -1,0 +1,9 @@
+{
+  "id": "auto-web-reader",
+  "name": "Quiet Car",
+  "version": "0.1.0",
+  "minAppVersion": "1.14.4",
+  "description": "Automatically use native Reader Mode for subsequent core Web Viewer pages on supported desktop versions.",
+  "author": "wannli",
+  "isDesktopOnly": true
+}

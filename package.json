@@ -1,0 +1,27 @@
+{
+  "name": "quiet-car",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Quiet Car: a standalone native Reader Mode plugin for Obsidian",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wannli/quiet-car.git"
+  },
+  "homepage": "https://github.com/wannli/quiet-car#readme",
+  "bugs": {
+    "url": "https://github.com/wannli/quiet-car/issues"
+  },
+  "scripts": {
+    "build": "npm run typecheck && node esbuild.config.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:compile": "tsc -p tsconfig.tests.json",
+    "test": "npm run test:compile && node --test .test-build/tests/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "esbuild": "0.28.2",
+    "obsidian": "1.13.1",
+    "typescript": "5.9.3"
+  }
+}
